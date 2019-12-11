@@ -15,7 +15,8 @@ namespace Singleton1112
 
     public class Singleton
     {
-        private static Singleton _instance;
+        private static readonly Object syncRoot = new object();
+        private static volatile Singleton _instance;
         private Singleton() { }
         public static Singleton Instance
         {
@@ -23,7 +24,13 @@ namespace Singleton1112
             { 
                 if(_instance == null)
                 {
-                    _instance = new Singleton();
+                    lock (syncRoot)
+                    {
+                        if(_instance == null)
+                        {
+                            _instance = new Singleton();
+                        }
+                    }                    
                 }
                 return _instance;
             }
